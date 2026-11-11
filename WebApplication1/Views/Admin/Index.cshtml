@@ -1,0 +1,24 @@
+@model List<(ApplicationUser Account, string Roles)>
+@using System.Security.Claims
+<h1>Manage users</h1>
+@if (TempData["Error"] is string error) { <p class="text-danger">@error</p> }
+<table class="table">
+    <thead><tr><th>Full name</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
+    <tbody>
+    @foreach (var entry in Model)
+    {
+        <tr>
+            <td>@entry.Account.FullName</td><td>@entry.Account.Email</td><td>@entry.Roles</td>
+            <td>
+                @if (entry.Account.Id != User.FindFirstValue(ClaimTypes.NameIdentifier))
+                {
+                    <a asp-action="Edit" asp-route-id="@entry.Account.Id">Change role</a>
+                    <form asp-action="Delete" asp-route-id="@entry.Account.Id" method="post" class="d-inline ms-2">
+                        <button class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

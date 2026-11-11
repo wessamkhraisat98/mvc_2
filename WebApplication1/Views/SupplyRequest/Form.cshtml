@@ -1,0 +1,31 @@
+@model List<RequestLine>
+@{
+    int id = ViewBag.RequestId;
+    List<Product> products = ViewBag.Products;
+    var action = id == 0 ? "Create" : "Edit";
+}
+<h1>@action supply request</h1>
+<form asp-action="@action" asp-route-id="@(id == 0 ? (int?)null : id)" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <table class="table">
+        <thead><tr><th>Product</th><th>Unit price</th><th>Available</th><th>Requested quantity</th></tr></thead>
+        <tbody>
+        @for (var i = 0; i < products.Count; i++)
+        {
+            var product = products[i];
+            var quantity = Model.FirstOrDefault(x => x.ProductId == product.Id)?.Quantity ?? 0;
+            <tr>
+                <td>@product.Name</td><td>@product.Price.ToString("0.00")</td><td>@product.Quantity</td>
+                <td>
+                    <input type="hidden" name="lines[@i].ProductId" value="@product.Id" />
+                    <input type="number" name="lines[@i].Quantity" value="@quantity" min="0" max="@product.Quantity"
+                           aria-label="Quantity for @product.Name" class="form-control" required />
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    @if (products.Count > 0) { <button class="btn btn-primary">Save request</button> }
+    else { <p>No products are available.</p> }
+    <a asp-action="Index" class="ms-2">Cancel</a>
+</form>

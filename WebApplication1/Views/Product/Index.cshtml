@@ -1,0 +1,28 @@
+@model List<Product>
+<h1>Products</h1>
+@if (TempData["Error"] is string error) { <p class="text-danger">@error</p> }
+@{
+    var canManage = User.IsInRole("Admin") || User.IsInRole("SuperAdmin");
+}
+@if (canManage) { <a asp-action="Create" class="btn btn-primary mb-3">Add product</a> }
+<table class="table">
+    <thead><tr><th>Name</th><th>Price</th><th>Available quantity</th><th>Actions</th></tr></thead>
+    <tbody>
+    @foreach (var product in Model)
+    {
+        <tr>
+            <td>@product.Name</td><td>@product.Price.ToString("0.00")</td><td>@product.Quantity</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@product.Id">Details</a>
+                @if (canManage)
+                {
+                    <a asp-action="Edit" asp-route-id="@product.Id" class="ms-2">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@product.Id" method="post" class="d-inline ms-2">
+                        <button class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

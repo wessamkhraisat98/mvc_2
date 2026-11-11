@@ -1,0 +1,20 @@
+@model List<SupplyRequest>
+@{
+    var canReview = User.IsInRole("Admin") || User.IsInRole("SuperAdmin");
+}
+<h1>@(canReview ? "Supply requests" : "My supply requests")</h1>
+<a asp-action="Create" class="btn btn-primary mb-3">New request</a>
+<table class="table">
+    <thead><tr><th>Request</th><th>Date</th>@if (canReview) { <th>Requested by</th> }<th>Total</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var request in Model)
+    {
+        <tr>
+            <td>@request.Id</td><td>@request.RequestDate.ToString("g")</td>
+            @if (canReview) { <td>@request.User.FullName</td> }
+            <td>@request.TotalPrice.ToString("0.00")</td><td>@request.Status</td>
+            <td><a asp-action="Details" asp-route-id="@request.Id">Details</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

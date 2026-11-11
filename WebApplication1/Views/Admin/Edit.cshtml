@@ -1,0 +1,19 @@
+@model ApplicationUser
+@using Microsoft.AspNetCore.Identity
+@{
+    IList<string> currentRoles = ViewBag.CurrentRoles;
+}
+<h1>Change role</h1>
+<p>@Model.FullName (@Model.Email)</p>
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <label for="roleId" class="form-label">Role</label>
+    <select id="roleId" name="roleId" class="form-select mb-3" required>
+        @foreach (IdentityRole role in ViewBag.Roles)
+        {
+            <option value="@role.Id" selected="@(currentRoles.Contains(role.Name!))">@role.Name</option>
+        }
+    </select>
+    <button class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="ms-2">Cancel</a>
+</form>

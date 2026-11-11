@@ -1,0 +1,8 @@
+@model Product
+<h1>@Model.Name</h1>
+<dl>
+    <dt>Description</dt><dd>@Model.Description</dd>
+    <dt>Price</dt><dd>@Model.Price.ToString("0.00")</dd>
+    <dt>Available quantity</dt><dd>@Model.Quantity</dd>
+</dl>
+<a asp-action="Index">Back to products</a>

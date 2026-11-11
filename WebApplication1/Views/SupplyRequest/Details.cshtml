@@ -1,0 +1,35 @@
+@model SupplyRequest
+@using System.Security.Claims
+<h1>Supply request #@Model.Id</h1>
+<p>Requested by: @Model.User.FullName</p>
+<p>Date: @Model.RequestDate.ToString("g")</p>
+<p>Status: @Model.Status</p>
+<table class="table">
+    <thead><tr><th>Product</th><th>Quantity</th><th>Unit price</th><th>Subtotal</th></tr></thead>
+    <tbody>
+    @foreach (var item in Model.Items)
+    {
+        <tr><td>@item.Product.Name</td><td>@item.Quantity</td><td>@item.Price.ToString("0.00")</td>
+            <td>@((item.Quantity * item.Price).ToString("0.00"))</td></tr>
+    }
+    </tbody>
+</table>
+<p><strong>Total: @Model.TotalPrice.ToString("0.00")</strong></p>
+@if (Model.Status == RequestStatus.Pending)
+{
+    if (Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit</a>
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+            <button class="btn btn-outline-danger">Delete</button>
+        </form>
+    }
+    if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+    {
+        <form asp-action="Review" asp-route-id="@Model.Id" method="post" class="d-inline">
+            <button name="status" value="Approved" class="btn btn-success">Approve</button>
+            <button name="status" value="Rejected" class="btn btn-danger">Reject</button>
+        </form>
+    }
+}
+<a asp-action="Index" class="ms-2">Back to requests</a>

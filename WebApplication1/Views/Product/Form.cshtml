@@ -1,0 +1,26 @@
+@model Product
+@{
+    var action = Model.Id == 0 ? "Create" : "Edit";
+}
+<h1>@action product</h1>
+<form asp-action="@action" asp-route-id="@(Model.Id == 0 ? (int?)null : Model.Id)" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" type="number" step="0.01" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Quantity" class="form-label"></label>
+        <input asp-for="Quantity" class="form-control" />
+    </div>
+    <button class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="ms-2">Cancel</a>
+</form>
